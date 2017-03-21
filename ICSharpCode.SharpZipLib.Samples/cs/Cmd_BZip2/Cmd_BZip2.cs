@@ -170,8 +170,26 @@ class Cmd_BZip2
 				break;
 
 			case Command.Compress:
-				Console.WriteLine("Compressing {0} to {1} at level {2}", parser.Source, parser.Target, parser.Level);
+				Stopwatch sw = Stopwatch.StartNew();
+
+                Console.WriteLine("Compressing {0} to {1} at level {2}", parser.Source, parser.Target, parser.Level);
+
+                sw.Start();
 				BZip2.Compress(File.OpenRead(parser.Source), File.Create(parser.Target), true, parser.Level);
+                sw.Stop();
+
+                FileStream Outputfile2 = File.OpenRead(parser.Target);
+                FileStream InFile2 = File.OpenRead(parser.Source);
+
+                Console.WriteLine(
+                    String.Format(
+                    "Time: {0} | Output Filesize: {1} MB | Original Filesize: {2} MB"
+                    , (sw.ElapsedMilliseconds / 1000).ToString()
+                    , (Outputfile2.Length / 1024f) / 1024f
+                    , (InFile2.Length / 1024f) / 1024f
+                    )
+                );
+
 				break;
 
 			case Command.Decompress:
